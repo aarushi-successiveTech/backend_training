@@ -5,6 +5,7 @@ import { loggerMiddleware } from "./middleware/loggerMiddleware";
 import { customHeader } from "./middleware/customMiddleware";
 import { rateLimiter } from "./controllers/rateLimiter";
 import userRoutes from './routes/userRoutes';
+import { NextFunction } from "express";
 
 const express = require("express");
 const app: Application = express();
@@ -39,6 +40,17 @@ app.post(
 
 app.get('/limiter', (req: Request, res: Response)=> {
     res.json({message : 'request sent successfully!'});
+});
+
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  if(res.headersSent){
+    return next(err);
+  }
+  const status = err.status || 500; 
+  res.status(status).json({
+    success : false, 
+    message : err.message || 'something went wrong'
+  });
 });
 
 export default app;

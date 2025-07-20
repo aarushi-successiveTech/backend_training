@@ -19,8 +19,8 @@ export const GeoLocation = (req: Request, res: Response, next: NextFunction) => 
     }
 
     else {
-        res.status(403).json({
-            message : "Not from a verified region"
-        });
+        const error = new Error("Country not allowed");
+        (error as any).status = 403; 
+        next(error);
     };
 }
