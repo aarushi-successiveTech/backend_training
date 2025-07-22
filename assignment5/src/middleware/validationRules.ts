@@ -1,7 +1,9 @@
 import {Request, Response, NextFunction} from 'express';
 import { schemaList } from './schemaList';
 
-export const checkDynamic = (req: Request, res: Response, next: NextFunction) =>{
+export class DynamicMiddleware {
+
+    checkDynamic = (req: Request, res: Response, next: NextFunction) =>{
 
     const path:string[] = req.url.split("/");
     console.log(path);
@@ -20,4 +22,5 @@ export const checkDynamic = (req: Request, res: Response, next: NextFunction) =>
     }
 
     next();
+}
 }

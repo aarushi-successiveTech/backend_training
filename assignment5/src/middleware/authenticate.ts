@@ -5,16 +5,18 @@ const SECRET_KEY = "secretKey123";
 export interface AuthRequest extends Request {
   user?: any;
 }
+export class Authentication {
 
-export const authenticateJwt = (
+  public authenticateJwt(
   req: AuthRequest,
   res: Response,
   next: NextFunction
-) => {
+): void {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
-    return res.status(401).json({ message: "Invalid token" });
+    res.status(401).json({ message: "Invalid token" });
+    return
   }
 
   const token = authHeader.split(" ")[1];
@@ -24,6 +26,8 @@ export const authenticateJwt = (
     req.user = decoded;
     next();
   } catch (err) {
-    return res.status(401).json({ message: "token expired" });
+    res.status(401).json({ message: "token expired" });return
   }
 };
+
+}

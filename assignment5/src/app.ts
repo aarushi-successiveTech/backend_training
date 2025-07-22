@@ -1,19 +1,22 @@
 import { Application, Request, Response } from "express";
 const mockdata = require("./utils/mockData");
-import { authenticateJwt } from "./middleware/authenticate";
-import { loggerMiddleware } from "./middleware/loggerMiddleware";
-import { customHeader } from "./middleware/customMiddleware";
+import { Authentication } from "./middleware/authenticate";
+import { Logger } from "./middleware/loggerMiddleware";
+import { CustomMiddleware } from "./middleware/customMiddleware";
 import { rateLimiter } from "./controllers/rateLimiter";
 import userRoutes from './routes/userRoutes';
 import { NextFunction } from "express";
 
 const express = require("express");
 const app: Application = express();
+const auth = new Authentication();
+const custom = new CustomMiddleware();
+const logs = new Logger();
 
 app.use(express.json());
 app.use(rateLimiter(5, 6000));
-app.use(loggerMiddleware);
-app.use(customHeader("created-by", "Aarushi"));
+app.use(logs.loggerMiddleware);
+app.use(custom.customHeader("created-by", "Aarushi"));
 app.use(userRoutes); 
 
 app.get("/", (req: Request, res: Response) => {
@@ -26,8 +29,8 @@ app.get("/user", (req: Request, res: Response) => {
 
 app.post(
   "/api/data",
-  loggerMiddleware,
-  authenticateJwt,
+  logs.loggerMiddleware,
+  auth.authenticateJwt,
   (req: Request, res: Response) => {
     const receivedData = req.body;
     console.log("Received data:", mockdata);

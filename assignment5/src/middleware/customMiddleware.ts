@@ -1,9 +1,10 @@
-import {Request, Response, NextFunction} from 'express';
+import { Request, Response, NextFunction } from "express";
 
-export const customHeader = (headerName : string, headerValue : string) => {
-
-    return (req: Request, res: Response, next: NextFunction) => {
-        res.setHeader(headerName, headerValue);
-        next();
-    }
+export class CustomMiddleware {
+  public customHeader(headerName: string, headerValue: string) {
+    return (req: Request, res: Response, next: NextFunction): void => {
+      res.setHeader(headerName, headerValue);
+      next();
+    };
+  }
 }
