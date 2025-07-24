@@ -7,6 +7,8 @@ import { rateLimiter } from "./controllers/rateLimiter";
 import userRoutes from './routes/userRoutes';
 import { NextFunction } from "express";
 import userCreator from "./services/createApi";
+import registerUser from "./services/registerApi";
+import loginUser from "./services/loginApi";
 
 const express = require("express");
 const app: Application = express();
@@ -20,6 +22,9 @@ app.use(logs.loggerMiddleware);
 app.use(custom.customHeader("created-by", "Aarushi"));
 app.use(userRoutes); 
 app.use('/', userCreator);     // 8000/create pr chaleg
+
+app.use('/', registerUser);    // for registering user
+app.use('/', loginUser);       // to login the user and check the password validation
 
 
 app.get("/", (req: Request, res: Response) => {
