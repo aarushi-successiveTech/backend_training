@@ -6,18 +6,21 @@ import { CustomMiddleware } from "./middleware/customMiddleware";
 import { rateLimiter } from "./controllers/rateLimiter";
 import userRoutes from './routes/userRoutes';
 import { NextFunction } from "express";
+import userCreator from "./services/createApi";
 
 const express = require("express");
 const app: Application = express();
 const auth = new Authentication();
 const custom = new CustomMiddleware();
-const logs = new Logger();
+const logs = new Logger();   
 
 app.use(express.json());
 app.use(rateLimiter(5, 6000));
 app.use(logs.loggerMiddleware);
 app.use(custom.customHeader("created-by", "Aarushi"));
 app.use(userRoutes); 
+app.use('/', userCreator);     // 8000/create pr chaleg
+
 
 app.get("/", (req: Request, res: Response) => {
   res.json(mockdata);
