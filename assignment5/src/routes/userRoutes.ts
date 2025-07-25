@@ -1,26 +1,38 @@
 import express, { Router } from 'express';
-import { getUser, ValidateUser, DataForm } from '../controllers/userController';
-import { ValidateSchema } from '../middleware/validationSchema';
-import { ValidateForm } from '../middleware/validateForm';
-import { validateParams } from '../middleware/validateParams';
-import { GeoLocation } from '../middleware/geoLocation';
-import { checkDynamic } from '../middleware/validationRules';
+import { UserController } from '../controllers/userController';
+import { SchemaValidation } from '../middleware/validationSchema';
+import { FormValidator } from '../middleware/validateForm';
+import { ParamValidation } from '../middleware/validateParams';
+import { GeoMiddleware } from '../middleware/geoLocation';
+import { DynamicMiddleware } from '../middleware/validationRules';
+import { HealthControls } from '../controllers/healthController';
 
 const router = express.Router();
+const geo = new GeoMiddleware();
+const form = new FormValidator();
+const params = new ParamValidation();
+const dynamic = new DynamicMiddleware();
+const schema = new SchemaValidation();
+const userControls = new UserController(); 
+const check = new HealthControls();
 
-router.get('/user', getUser);
+router.get('/user', userControls.getUser);
 
-router.post('/validateUser', ValidateSchema, ValidateUser); 
+router.post('/validateUser', schema.ValidateSchema, userControls.ValidateUser); 
 
-router.post('/validateForm', ValidateForm, DataForm); 
+router.post('/validateForm', form.ValidateForm, userControls.DataForm); 
 
-router.post('/validateForm/:id', validateParams, DataForm); 
+router.post('/validateForm/:id', params.validateParams, userControls.DataForm); 
 
-router.get("/location", GeoLocation, (req, res) => {
+router.get("/location", geo.GeoLocation, (req, res) => {
   res.json({ message: "you can access this route" });
 });
 
-router.post("/teacher", checkDynamic, (req, res) => {
+router.get('/health', check.healthCheck, (req, res) => {
+  res.json({message : "health check successful"});
+});
+
+router.post("/teacher", dynamic.checkDynamic, (req, res) => {
   res.status(200).send("successful log in teacher");
 });
 

@@ -1,6 +1,9 @@
 import {Request, Response, NextFunction} from 'express';
 
-export const validateParams = (req: Request, res: Response, next: NextFunction) => {
+
+export class ParamValidation {
+
+    validateParams = (req: Request, res: Response, next: NextFunction) => {
     const {id} = req.params; 
 
     if(isNaN(Number(id))){
@@ -14,3 +17,4 @@ export const validateParams = (req: Request, res: Response, next: NextFunction) 
         message : 'Params are verified'
     });
 };
+}
