@@ -6,6 +6,8 @@ import { ParamValidation } from '../middleware/validateParams';
 import { GeoMiddleware } from '../middleware/geoLocation';
 import { DynamicMiddleware } from '../middleware/validationRules';
 import { HealthControls } from '../controllers/healthController';
+import { authorizeRole } from '../middleware/authorizeRole';
+import { authenticateToken } from '../middleware/authenticateToken';
 
 const router = Router();
 const geo = new GeoMiddleware();
@@ -80,5 +82,15 @@ router.post('/validateError', (req, res, next) => {
     message : 'data entered successfully'
   });
 });
+
+
+router.get('/admin/dashboard',authenticateToken ,authorizeRole('admin'), (req, res) => {
+  res.json({message: 'welcome admin'}); 
+}); 
+
+router.get('/user/data',authenticateToken ,authorizeRole('user', 'admin'), (req, res) => {
+  res.json({message: 'welcome user'}); 
+}); 
+
 
 export default router; 
