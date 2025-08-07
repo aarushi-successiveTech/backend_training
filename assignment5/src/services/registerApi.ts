@@ -26,7 +26,8 @@ registerUser.post('/register', async(req, res) =>{
         const newUser = new User({
             name : value.name, 
             email : value.email, 
-            password : hashPassword
+            password : hashPassword, 
+            role : 'user'
         });
         await newUser.save();
         return res.status(401).json({message: 'user registered successfully', 
