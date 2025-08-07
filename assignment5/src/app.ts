@@ -9,6 +9,7 @@ import { NextFunction } from "express";
 import userCreator from "./services/createApi";
 import registerUser from "./services/registerApi";
 import loginUser from "./services/loginApi";
+import { securityHeader } from "./middleware/securityHeaders";
 
 const express = require("express");
 const app: Application = express();
@@ -18,6 +19,7 @@ const logs = new Logger();
 
 app.use(express.json());
 app.use(rateLimiter(5, 6000));
+app.use(securityHeader.headerProtection); 
 app.use(logs.loggerMiddleware);
 app.use(custom.customHeader("created-by", "Aarushi"));
 app.use(userRoutes); 
