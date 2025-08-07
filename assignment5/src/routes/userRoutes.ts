@@ -1,4 +1,4 @@
-import express, { Router } from 'express';
+import  { Router } from 'express';
 import { UserController } from '../controllers/userController';
 import { SchemaValidation } from '../middleware/validationSchema';
 import { FormValidator } from '../middleware/validateForm';
@@ -7,7 +7,7 @@ import { GeoMiddleware } from '../middleware/geoLocation';
 import { DynamicMiddleware } from '../middleware/validationRules';
 import { HealthControls } from '../controllers/healthController';
 
-const router = express.Router();
+const router = Router();
 const geo = new GeoMiddleware();
 const form = new FormValidator();
 const params = new ParamValidation();
